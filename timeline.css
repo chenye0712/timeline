@@ -38,18 +38,47 @@ body {
 	/*margin: 0px 30px;*/
 }
 
+button.control {
+	  position: fixed;
+	  color: #666;
+	  font-size: 16px;
+	  height:50px;
+	  width: 50px;
+	  border: none;
+	  border-radius:50px 50px 50px 50px;
+	  background: rgb(243,241,238);
+	  padding: 5px 10px 5px 10px;
+	  text-decoration: none;
+	  outline: none;
+}
+button.control:hover {
+	background: lightgray;
+}
+
+#left{
+	left:10px;
+}
+#right{
+	right:10px;
+}
+
 .tooltip{
 	position: relative;
-	width: 100px;
-	height: auto;
-    background-color: white;
     text-align: left;
+    font-size: 10px;
     padding: 5px 5px;
-    border-radius: 5px;
-    -moz-box-shadow: 4px 4px 10px rgba(0,0,0,0.4);
-	-webkit-box-shadow: 4px 4px 10px rgba(0,0,0,0.4);
-	box-shadow: 4px 4px 4px rgba(0,0,0,0.4);
+
+
 }
+.description{
+	stroke: white;
+}
+
+.tooltip rect{
+	fill:rgb(220, 225, 31);
+	z-index: 100;
+}
+
 
 
 
@@ -62,6 +91,7 @@ body {
 .axis line {
   fill: none;
   stroke: #000;
+  stroke-width:2px;
   shape-rendering: crispEdges;
 
 }
@@ -71,18 +101,22 @@ rect.pane {
 	  pointer-events: all;
 	}
 
-image{
-	height: 32px;
-	width: 32px;
+.photo{
+/*	height: 32px;
+	width: 32px;*/
 	/*display: block;*/
 	/*position: fixed;*/
-	/*position: relative;*/
+	position: relative;
+	z-index: 1;
+}
+
+.hidden{
+	display: none;
 }
 
 image:hover {
-	
-/*	position: relative;
-	width: 64px;
+
+/*	width: 64px;
 	height: 64px;
 	left: -32px;
 	top: -32px;
