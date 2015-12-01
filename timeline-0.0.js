@@ -125,10 +125,12 @@ function  Timeline() { //This is a function statement to define a function
 				var people =d3.select(this).selectAll('.person').data(d.value).enter().append("g").attr("class","person");
 		
 				people.append("svg:image").attr("class","photo")
-						.attr("xlink:href", "img/Chen Ye.png")
+						//.attr("xlink:href", "img/Chen Ye.png")
 						.attr("xlink:href", function(d){
 							src ="img/" + d.name +".png";
-							return src;
+							console.log(imageExists(src));
+							if(imageExists(src)) return src
+							else return "img/imgholder.png"
 						})
 						.attr("width", pic_width)
 						.attr("height", pic_height)
@@ -185,8 +187,8 @@ function  Timeline() { //This is a function statement to define a function
 							.attr("y2", height-40)
 							.style({
 								"stroke-width":"1px",
-								"stroke":"steelblue",
-								"display":"none"
+								"stroke":"steelblue"
+								//"display":"none"
 							});
 
 				people.append('circle')
@@ -210,7 +212,7 @@ function  Timeline() { //This is a function statement to define a function
 						});
 				tooltips.append('text').attr("class","description")
 						.text(function(d){
-							return d.name;
+							return d.name + ' '+d.degree + d.endyear;
 						})
 						.attr("transform", function(d){
 							return "translate(0," + 20+ ")";
@@ -221,15 +223,26 @@ function  Timeline() { //This is a function statement to define a function
 						});
 
 
-
-				people.append('circle').attr("class","extension").style("display","none")
-						.attr("cx", function(d){ 
-							if(d.endyear ==="current") return x(today);
-							else return x(parseDate(d.endyear)); 
+				people.append('line').attr("class","extension")//.style("display","none")
+						.attr("x1", 0)
+						.attr("x2", function(d){ 
+							if(d.endyear!=="current") return x(parseDate(d.endyear))-startdate
+							else return 0 
 						})
-						.attr("cy", height-pic_height/2)
-						.attr("r", 10)
-						.attr("fill", "green");
+						.attr("y1", function(d,j){ 
+							console.log(d);
+							var cy= parseInt(d3.select(this.parentNode).select('image').attr("y")) +pic_height*2;
+							console.log(cy);
+							return cy
+						})
+						.attr("y2",function(d,i){ 
+							var cy = parseInt(d3.select(this.parentNode).select('image').attr("y")) +pic_height*2;
+							return cy
+						})
+						.style({
+								"stroke-width":"5px",
+								"stroke":"steelblue"
+						});
 
 		
 				});//end of person each
@@ -352,29 +365,7 @@ function  Timeline() { //This is a function statement to define a function
 	} // end of  play
 
 		
-	Timeline.prototype.forward=function(){
-		console.log(activeperson);
-  			xd = x0.domain();
 
-		var activedata = activeperson.data();
-		var activedate = parseDate(activedata[0].key); //the date at the center position
-		var one_day=1000*60*60*24;
-		var shift = (x0.invert(centerx).getTime()-activedate.getTime())/one_day;
-
-
-		xd[0]=d3.time.day.offset(xd[0],-shift);
-		xd[1]=d3.time.day.offset(xd[1],-shift);
-		console.log(shift,translate,scale);
-		// var newdaterange = [parseDate(activedata[0].key), parseDate("2017-01")];
-	    x.domain(xd); //
-	    zoom.x(x.domain(xd)); //reassign the scale to zoom
-	   
-		d3.select(".x.axis").transition().duration(500).call(xAxis); // need to call this to update the axis
-	    d3.selectAll(".date").transition().duration(500).attr("transform", function(d) {
-    		return "translate(" + (x(parseDate(d.key))) + ",0)";
-    	});
-		
-	} // end of next
 
 	function zooming(){
 		//call the zoom.translate vector with the array returned from panLimit
@@ -399,5 +390,16 @@ function  Timeline() { //This is a function statement to define a function
     function panLimit(){
 
     }
+
+    function imageExists(image_url){
+
+	    var http = new XMLHttpRequest();
+
+	    http.open('HEAD', image_url, false);
+	    http.send();
+
+	    return http.status != 404;
+
+	}
 
 }
